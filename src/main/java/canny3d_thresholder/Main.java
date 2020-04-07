@@ -1,4 +1,4 @@
-package canny3d_thresholder; // TODO change package Name
+package canny3d_thresholder; 
 
 import java.awt.event.WindowEvent;
 
@@ -8,8 +8,8 @@ import ij.plugin.PlugIn;
 
 public class Main implements PlugIn {
 
-	static String pluginName = "plugin Name"; // TODO change Name
-	static String pluginVersion = "0.0.2";
+	static String pluginName = "Canny 3D Thresholder"; 
+	static String pluginVersion = "0.0.1";
 	ProgressDialog progressDialog;
 	boolean processingDone = false;
 	boolean continueProcessing = true;
@@ -22,10 +22,8 @@ public class Main implements PlugIn {
 	 */
 	public void run(String arg) {
 		pS = null;
-		ImageSetting iS = null;
 		try {
 			pS = ProcessSettings.initByGD(pluginName, pluginVersion);
-			iS = ImageSetting.initByGD(pluginName, pluginVersion);
 		} catch (Exception e) {
 			new WaitForUserDialog("GD canceled - end Plugin!").show();
 			return;
@@ -37,7 +35,7 @@ public class Main implements PlugIn {
 
 		for (int task = 0; task < pS.getNOfTasks(); task++) {
 			progressDialog.updateBarText("in progress...");
-			Processing.doProcessing(pS.paths.get(task), pS.names.get(task), pS.getOutputDir(task), pS, iS, progressDialog);
+			Processing.doProcessing(pS.paths.get(task), pS.names.get(task), pS.getOutputDir(task), pS, progressDialog);
 			progressDialog.moveTask(task);
 		}
 		progressDialog.updateBarText("finished!");

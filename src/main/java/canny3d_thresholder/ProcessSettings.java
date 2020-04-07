@@ -64,7 +64,14 @@ public class ProcessSettings {
 	boolean resultsToNewFolder = false;
 	String resultsDir = ""; // Specifies dir where output files will be saved if they are to be saved no new
 							// folder
-//	int channels = 3;
+
+	double gausSigma = 1.0;
+	static String [] thrAlgorithms = {"Custom Value", "Huang", "Intermodes", "IsoData", "IJ_IsoData", "Li", "MaxEntropy", 
+			"Mean", "MinError", "Minimum", "Moments", "Otsu", "Percentile", "RenyiEntropy", "Shanbhag", "Triangle", "Yen"};
+	String lowThrAlgorithm = "Otsu";
+	String highThrAlgorithm = "Triangle";
+	double lowThr = 0.0;
+	double highThr = 0.0;
 
 	// --------------------- Task data
 
@@ -101,16 +108,17 @@ public class ProcessSettings {
 		final Font textFont = new Font("Sansserif", Font.PLAIN, 12);
 
 		GenericDialog gd = new GenericDialog(pluginName + " - Image Processing Settings");
-		gd.setInsets(0, 0, 0);
-		gd.addMessage(pluginName + " - Version " + pluginVersion, headingFont);
+		gd.addMessage(pluginName + " - Version " + pluginVersion + " (© 2020 Sebastian Rassmann)", headingFont);	
 		gd.addMessage("Insert Processing settings", textFont);
 
 		// Change as necessary
-		gd.setInsets(0, 0, 0);
 		gd.addChoice("File selection method ", taskVariant, inst.selectedTaskVariant);
-		gd.setInsets(0, 0, 0);
 		gd.addChoice("Input File format ", bioFormats, inst.selectedBioFormat);
-		gd.setInsets(0, 0, 0);
+		gd.addNumericField("Sigma for Gaussian blur", inst.gausSigma, 4);
+		gd.addChoice("Select method for low threshold", thrAlgorithms, inst.highThrAlgorithm);
+		gd.addNumericField("Value (if custom value is chosen)", inst.highThr, 8);
+		gd.addChoice("Select method for high threshold", thrAlgorithms, inst.lowThrAlgorithm);
+		gd.addNumericField("Value (if custom value is chosen)", inst.lowThr, 8);
 		gd.addCheckbox("Output to new Folder", inst.resultsToNewFolder);
 
 		// show Dialog-----------------------------------------------------------------
@@ -120,7 +128,15 @@ public class ProcessSettings {
 
 		inst.selectedTaskVariant = gd.getNextChoice();
 		inst.selectedBioFormat = gd.getNextChoice();
+		inst.gausSigma = gd.getNextNumber();
+		inst.highThrAlgorithm = gd.getNextChoice();
+		inst.lowThrAlgorithm = gd.getNextChoice();		
+		inst.lowThr = gd.getNextNumber();
+		inst.highThr = gd.getNextNumber();
 		inst.resultsToNewFolder = gd.getNextBoolean();
+		
+		if(inst.lowThrAlgorithm != thrAlgorithms[0]) inst.lowThr = 0.0;
+		if(inst.highThrAlgorithm != thrAlgorithms[0]) inst.highThr = 0.0;
 
 		if (gd.wasCanceled())
 			throw new Exception("GD canceled by user");
