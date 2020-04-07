@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>sc.fiji</groupId>
+		<artifactId>pom-fiji</artifactId>
+		<version>17.0.0</version>
+		<relativePath />
+	</parent> 
+    <version>0.0.1</version>
+ 
+ 	<url>https://github.com/sRassmann/canny3d-thresholder</url>
+	<inceptionYear>2020</inceptionYear>
+		
+	<licenses>
+		<license>
+			<name>GNU General Public License v3+</name>
+			<url>http://www.gnu.org/licenses/gpl.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<developers>            
+            <developer>
+            <id></id>
+            <name>Sebastian Raßmann</name>
+            <email>rassmann@uni-bonn.de</email>
+            <url>r</url>
+            <organization></organization>
+            <organizationUrl></organizationUrl>
+            <roles>
+                <role>founder</role>
+                <role>lead</role>
+                <role>developer</role>
+                <role>debugger</role>
+                <role>reviewer</role>
+                <role>support</role>
+                <role>maintainer</role>
+            </roles>
+            <timezone>+1</timezone>
+            </developer>           
+    </developers>
+    
+    <contributors>
+        <contributor><name>Jan N Hansen</name></contributor>
+    </contributors>
+ 	
+ 	<mailingLists>
+		<mailingList>
+			<name>ImageJ Forum</name>
+			<archive>http://forum.imagej.net/</archive>
+		</mailingList>
+	</mailingLists>
+ 	
+ 	<ciManagement>
+		<system>None</system>
+	</ciManagement>
+ 	
+ 	<properties>
+		<main-class>Main</main-class>
+		<package-name>canny3d_thesholder</package-name>
+		<license.licenseName>gpl_v3</license.licenseName>
+		<license.copyrightOwners>Sebastian Raßmann, Jan N. Hansen</license.copyrightOwners>	
+		<additionalparam>-Xdoclint:none</additionalparam>
+	</properties>
+ 	
+ 	<repositories>
+    	<repository>
+            <id>imagej.public</id>
+            <url>http://maven.imagej.net/content/groups/public</url>
+        </repository>
+    </repositories>
+ 
+    <dependencies>
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+        </dependency>        
+    </dependencies>  
+    
+    <build>
+		<plugins>	
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<additionalparam>-Xdoclint:none</additionalparam>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<projectName>PluginName</projectName>
+					<descriptorRefs>
+            			<descriptorRef>jar-with-dependencies</descriptorRef>
+          			</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>${main-class}</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			
+
+		</plugins>
+	</build>  
+    <description>Plugin to preform image binarization based on a canny edge detection in 3 dimensions</description>
+    <name>Canny 3D Thresholder</name>		
+    <artifactId>canny3d_thresholder</artifactId>
+</project>
