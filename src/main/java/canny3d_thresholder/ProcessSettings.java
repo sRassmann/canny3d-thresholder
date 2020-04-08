@@ -134,9 +134,6 @@ public class ProcessSettings {
 		inst.lowThr = gd.getNextNumber();
 		inst.highThr = gd.getNextNumber();
 		inst.resultsToNewFolder = gd.getNextBoolean();
-		
-		if(inst.lowThrAlgorithm != thrAlgorithms[0]) inst.lowThr = 0.0;
-		if(inst.highThrAlgorithm != thrAlgorithms[0]) inst.highThr = 0.0;
 
 		if (gd.wasCanceled())
 			throw new Exception("GD canceled by user");
