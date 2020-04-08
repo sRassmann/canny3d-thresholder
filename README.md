@@ -7,4 +7,4 @@ The plugin implements a [custom batch processing handler](https://github.com/sRa
 3. Performing a 3D Hysterisis Threshold: All pixels above a defined high threshold are kept, pixel below the defined low threshold are neglected, pixels in between the low and high threshold are only kept if they are connected to pixels above the high threshold.   
 High and low thresholds can be defined using either custom values or can be calculated using ImageJ's thresholding methods based on the histogram of the whole stack.
 4. Holes encapsulated in all dimensions are filled
-5. The image is saved with the suffix  '*\_canny3d.tif*'  as 8 bit image
+5. The image is saved with the suffix  '*\_canny3d.tif*'  as 16 bit image

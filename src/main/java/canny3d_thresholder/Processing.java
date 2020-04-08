@@ -53,6 +53,7 @@ public class Processing {
 
 		IJ.run(bin, "8-bit", "");
 		IJ.run(bin, "3D Fill Holes", "");
+		IJ.run(bin, "16-bit", "");
 
 		IJ.save(bin, outputDir + System.getProperty("file.separator") + name + "_canny3d.tif");
 		bin.changes = false;
