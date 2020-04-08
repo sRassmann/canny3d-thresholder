@@ -51,12 +51,9 @@ public class ProcessSettings {
 			"use list (txt)", "pattern matching" };
 	String selectedTaskVariant = taskVariant[4];
 
-	static final String[] bioFormats = { ".tif", "raw microscopy file (e.g. OIB-file)" };
-	String selectedBioFormat = bioFormats[0];
-
-	String posFilePattern = "_C1.tif"; // pattern to be matched in Filename
-	String negFilePattern = ".nd2"; // pattern to exclude filenames even if pos Pattern was matched
-	String negDirPattern = "Clone 123"; // pattern to exclude files by parent dir
+	String posFilePattern = "_C2.tif"; // pattern to be matched in Filename
+	String negFilePattern = ""; // pattern to exclude filenames even if pos Pattern was matched
+	String negDirPattern = ""; // pattern to exclude files by parent dir
 
 //	boolean saveDateToFilenames = false;
 //	boolean saveParam = true;
@@ -109,11 +106,10 @@ public class ProcessSettings {
 
 		GenericDialog gd = new GenericDialog(pluginName + " - Image Processing Settings");
 		gd.addMessage(pluginName + " - Version " + pluginVersion + " (© 2020 Sebastian Rassmann)", headingFont);	
-		gd.addMessage("Insert Processing settings", textFont);
+		gd.addMessage("Insert Processing settings", new Font("Sansserif", Font.PLAIN, 14));
 
 		// Change as necessary
 		gd.addChoice("File selection method ", taskVariant, inst.selectedTaskVariant);
-		gd.addChoice("Input File format ", bioFormats, inst.selectedBioFormat);
 		gd.addNumericField("Sigma for Gaussian blur", inst.gausSigma, 4);
 		gd.addChoice("Select method for low threshold", thrAlgorithms, inst.highThrAlgorithm);
 		gd.addNumericField("Value (if custom value is chosen)", inst.highThr, 8);
@@ -127,7 +123,6 @@ public class ProcessSettings {
 		// read and process variables--------------------------------------------------
 
 		inst.selectedTaskVariant = gd.getNextChoice();
-		inst.selectedBioFormat = gd.getNextChoice();
 		inst.gausSigma = gd.getNextNumber();
 		inst.highThrAlgorithm = gd.getNextChoice();
 		inst.lowThrAlgorithm = gd.getNextChoice();		
@@ -354,17 +349,6 @@ public class ProcessSettings {
 		return s;
 	}
 
-//	public static void main (String args[]) throws IOException {
-//		ProcessSettings p = new ProcessSettings();
-//		p.posFilePattern = ".tif"; // pattern to be matched in Filename
-//		p.negFilePattern = "001"; // pattern to exclude filenames even if pos Pattern was matched
-//		p.negDirPattern = "";	// pattern to exclude files by parent dir
-//		p.matchPattern("C:\\Users\\sebas\\Desktop\\tmp programming");
-//		for(int i = 0; i < p.names.size(); i++) {
-//			System.out.println(p.paths.get(i)+p.names.get(i) );
-//		}		
-//	}
-
 	/**
 	 * Wraps functionality of opening Images in IJ depending on the chosen file
 	 * format
@@ -373,14 +357,7 @@ public class ProcessSettings {
 	 * @return reference of opened ImagePlus
 	 */
 	public ImagePlus openImage(String path) {
-		ImagePlus imp;
-		if (this.selectedBioFormat.equals(ProcessSettings.bioFormats[0])) {
-			imp = IJ.openImage(path);
-		} else {
-			IJ.run("Bio-Formats", "open=[" + path
-					+ "] autoscale color_mode=Default rois_import=[ROI manager] view=Hyperstack stack_order=XYCZT");
-			imp = WindowManager.getCurrentImage();
-		}
+		ImagePlus imp = IJ.openImage(path);		
 		return imp;
 	}
 
