@@ -1,28 +1,10 @@
-# ImageJPluginTemplate
-A simple template to generate ImageJ plugins for multifile processing 
+# Canny 3D Thresholder
+An ImageJ Plugin implementing a modified [canny 3d edge detection](https://en.wikipedia.org/wiki/Canny_edge_detector) to threshold images stacks based on the [3D ImageJ Suite](https://imagejdocu.tudor.lu/plugin/stacks/3d_ij_suite/start) package.
 
-  
-How to use this template:
-
-clone the repository
-update the project name and metadata (Note: ImageJ requires a underscore in the name of the .jar, thus, it is recommended to choose a name containing a underscore)
-	-package name
-	
-	-pom.xml
-		-version
-		-date
-		-owner
-		-repository URL
-		-description
-		-artifact ID (should be the name as everywhere else, needs to contain the underscore)
-		
-	-plugin.config
-	
-	-Run configuration
-	
-	-plugin Name (and version) in the Main
-
-test the project and see if the template compiles and runs with changed settings
-
-modify the Processing.doProcessing() method as desired
-	
+The plugin implements a [custom batch processing handler](https://github.com/sRassmann/imageJ-plugin-template) and perform the follwoing steps:   
+1. Smoothens the image stack to supress random noise via a 2D Gaussian blur filter (the z dimension is assumed to have a lower resolution and a blur efect due to confocal imaging)
+2. Detect edges using a 3D Sobel kernel
+3. Performing a 3D Hysterisis Threshold: All pixels above a defined high threshold are kept, pixel below the defined low threshold are neglected, pixels in between the low and high threshold are only kept if they are connected to pixels above the high threshold.   
+High and low thresholds can be defined using either custom values or can be calculated using ImageJ's thresholding methods based on the histogram of the whole stack.
+4. Holes encapsulated in all dimensions are filled
+5. The image is saved with the suffix  '*\_canny3d.tif*'  as 8 bit image
