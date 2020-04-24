@@ -47,9 +47,16 @@ public class ProcessSettings {
 
 	// add necessary Settings and defaults here
 
-	static final String[] taskVariant = { "active image in FIJI", "all images open in FIJI", "manual file selection",
+	static final String[] TASKVARIANTS = { "active image in FIJI", "all images open in FIJI", "manual file selection",
 			"use list (txt)", "pattern matching" };
-	String selectedTaskVariant = taskVariant[4];
+	String selectedTaskVariant = TASKVARIANTS[4];
+	
+	static final String[] INPUTFORMATS = { "TIFF (single channel)", "TIFF (multi channel)", "raw microscopy file (e.g. ND2-file)" };
+	String selectedInputFormat = INPUTFORMATS[0];
+	int thrChannel = 0; // stored internally as 0 based indices!!!!1!!eleven!!
+	boolean [] saveChannels; // stored internally as 0 based indices!!!!1!!eleven!!
+	
+	public final static String CHANNELSUFFIX = "C"; // defines the suffix added to the Channel (together with IJ's channel index)
 
 	String posFilePattern = "_C2.tif"; // pattern to be matched in Filename
 	String negFilePattern = ""; // pattern to exclude filenames even if pos Pattern was matched
@@ -63,6 +70,7 @@ public class ProcessSettings {
 							// folder
 
 	double gausSigma = 1.0;
+	double cannyAlpha = 5.0;
 	static String [] thrAlgorithms = {"Custom Value", "Huang", "Intermodes", "IsoData", "IJ_IsoData", "Li", "MaxEntropy", 
 			"Mean", "MinError", "Minimum", "Moments", "Otsu", "Percentile", "RenyiEntropy", "Shanbhag", "Triangle", "Yen"};
 	String lowThrAlgorithm = "Otsu";
@@ -99,18 +107,16 @@ public class ProcessSettings {
 	 */
 	public static ProcessSettings initByGD(String pluginName, String pluginVersion) throws Exception {
 
-		ProcessSettings inst = new ProcessSettings(); // returned instance of ImageSettingClass
-
-		final Font headingFont = new Font("Sansserif", Font.BOLD, 14);
-		final Font textFont = new Font("Sansserif", Font.PLAIN, 12);
+		ProcessSettings inst = new ProcessSettings(); // returned instance of ImageSetting class
 
 		GenericDialog gd = new GenericDialog(pluginName + " - Image Processing Settings");
-		gd.addMessage(pluginName + " - Version " + pluginVersion + " (© 2020 Sebastian Rassmann)", headingFont);	
+		gd.addMessage(pluginName + " - Version " + pluginVersion + " (© 2020 Sebastian Rassmann)", new Font("Sansserif", Font.BOLD, 14));	
 		gd.addMessage("Insert Processing settings", new Font("Sansserif", Font.PLAIN, 14));
 
-		// Change as necessary
-		gd.addChoice("File selection method ", taskVariant, inst.selectedTaskVariant);
+		gd.addChoice("File selection method ", TASKVARIANTS, inst.selectedTaskVariant);
+		gd.addChoice("Select image input format", INPUTFORMATS, inst.selectedInputFormat);
 		gd.addNumericField("Sigma for Gaussian blur", inst.gausSigma, 4);
+		gd.addNumericField("Alpha (sensitivity for edge detection)", inst.cannyAlpha, 4);
 		gd.addChoice("Select method for low threshold", thrAlgorithms, inst.highThrAlgorithm);
 		gd.addNumericField("Value (if custom value is chosen)", inst.highThr, 8);
 		gd.addChoice("Select method for high threshold", thrAlgorithms, inst.lowThrAlgorithm);
@@ -121,21 +127,45 @@ public class ProcessSettings {
 		gd.showDialog();
 
 		// read and process variables--------------------------------------------------
-
 		inst.selectedTaskVariant = gd.getNextChoice();
+		inst.selectedInputFormat = gd.getNextChoice();
 		inst.gausSigma = gd.getNextNumber();
+		inst.cannyAlpha = gd.getNextNumber();
 		inst.highThrAlgorithm = gd.getNextChoice();
 		inst.lowThrAlgorithm = gd.getNextChoice();		
 		inst.lowThr = gd.getNextNumber();
 		inst.highThr = gd.getNextNumber();
 		inst.resultsToNewFolder = gd.getNextBoolean();
-
-		if (gd.wasCanceled())
-			throw new Exception("GD canceled by user");
+	
+		if (gd.wasCanceled()) throw new Exception("GD canceled by user");
+		
+		if(inst.selectedInputFormat != INPUTFORMATS[0]) {
+			showChannelSplitterDialog(inst, 4);
+		}
 
 		inst.fileFinder();
 
 		return inst;
+	}
+
+	private static void showChannelSplitterDialog(ProcessSettings inst, int nChannels) throws Exception {
+		GenericDialog gd = new GenericDialog("Channel Splitter Settings");
+		String [] channels = new String [nChannels];
+		inst.saveChannels = new boolean[nChannels];
+		for(int c = 0; c < nChannels; c++) {
+			channels [c] = "Channel " + (c+1);
+			inst.saveChannels [c] = true;
+		}
+		gd.addChoice("Thresholding Channel", channels, "Channel " + inst.thrChannel);
+		gd.addCheckboxGroup(4, 1, channels, inst.saveChannels);
+		gd.showDialog();
+		
+		inst.thrChannel = (Integer.parseInt(gd.getNextChoice().replace("Channel ", ""))-1);
+//		IJ.log("threshold channel: " + inst.thrChannel + " (" + ++inst.thrChannel + ")");
+		for(int c = 0; c < nChannels; c++) {
+			inst.saveChannels[c] = gd.getNextBoolean();
+		}
+		if (gd.wasCanceled()) throw new Exception("GD canceled by user");
 	}
 
 	/**
@@ -150,7 +180,7 @@ public class ProcessSettings {
 
 		}
 
-		if (this.selectedTaskVariant == taskVariant[0]) { // only one image open
+		if (this.selectedTaskVariant == TASKVARIANTS[0]) { // only one image open
 			if (WindowManager.getIDList() == null) {
 				new WaitForUserDialog("Plugin canceled - no image open in FIJI!").show();
 				throw new IOException();
@@ -159,14 +189,14 @@ public class ProcessSettings {
 				this.names.add(info.fileName); // get name
 				this.paths.add(info.directory); // get directory
 			}
-		} else if (this.selectedTaskVariant == taskVariant[1]) { // select files individually
+		} else if (this.selectedTaskVariant == TASKVARIANTS[1]) { // select files individually
 			if (WindowManager.getIDList() == null) {
 				new WaitForUserDialog("Plugin canceled - no image open in FIJI!").show();
 				throw new IOException();
 			}
 			int IDlist[] = WindowManager.getIDList();
 			if (IDlist.length == 1) {
-				selectedTaskVariant = taskVariant[0];
+				selectedTaskVariant = TASKVARIANTS[0];
 				FileInfo info = WindowManager.getCurrentImage().getOriginalFileInfo();
 				names.add(info.fileName); // get name
 				paths.add(info.directory); // get directory
@@ -177,7 +207,7 @@ public class ProcessSettings {
 					paths.add(info.directory); // get directory
 				}
 			}
-		} else if (this.selectedTaskVariant == taskVariant[2]) {
+		} else if (this.selectedTaskVariant == TASKVARIANTS[2]) {
 			OpenFilesDialog od = new OpenFilesDialog();
 			od.setLocation(0, 0);
 			od.setVisible(true);
@@ -199,9 +229,9 @@ public class ProcessSettings {
 				names.add(f.getName());
 				paths.add(f.getParent() + System.getProperty("file.separator"));
 			}
-		} else if (this.selectedTaskVariant == taskVariant[3]) {
+		} else if (this.selectedTaskVariant == TASKVARIANTS[3]) {
 			readFilesFromTxt(System.getProperty("user.dir"));
-		} else if (this.selectedTaskVariant == taskVariant[4]) {
+		} else if (this.selectedTaskVariant == TASKVARIANTS[4]) {
 			matchPattern(System.getProperty("user.dir"));
 		}
 	}
@@ -357,7 +387,14 @@ public class ProcessSettings {
 	 * @return reference of opened ImagePlus
 	 */
 	public ImagePlus openImage(String path) {
-		ImagePlus imp = IJ.openImage(path);		
+		ImagePlus imp;
+		if (this.selectedInputFormat != ProcessSettings.INPUTFORMATS[2]) { // Image is TIFF
+			imp = IJ.openImage(path);
+		} else {
+			IJ.run("Bio-Formats", "open=[" + path
+					+ "] autoscale color_mode=Default rois_import=[ROI manager] view=Hyperstack stack_order=XYCZT");
+			imp = WindowManager.getCurrentImage();
+		}
 		return imp;
 	}
 
@@ -383,6 +420,11 @@ public class ProcessSettings {
 	 */
 	public String getOutputDir(int taskIndex) {
 		return this.resultsToNewFolder ? this.resultsDir : this.paths.get(taskIndex);
+	}
+	
+	public static String removeFileSuffix(String filename) {
+		String s = filename.replace(filename.substring(filename.lastIndexOf("."), filename.length()), "");
+		return s;
 	}
 
 	public void selectOutputDir() {

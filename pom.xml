@@ -7,7 +7,7 @@
 		<version>17.0.0</version>
 		<relativePath />
 	</parent> 
-    <version>0.0.1</version>
+    <version>0.0.2</version>
  
  	<url>https://github.com/sRassmann/canny3d-thresholder</url>
 	<inceptionYear>2020</inceptionYear>
@@ -106,7 +106,7 @@
 
 		</plugins>
 	</build>  
-    <description>Plugin to preform image binarization based on a canny edge detection in 3 dimensions</description>
+    <description>Plugin to perfom object dection based on a canny edge detector in 3 dimensions</description>
     <name>Canny 3D Thresholder</name>		
     <artifactId>canny3d_thresholder</artifactId>
 </project>
