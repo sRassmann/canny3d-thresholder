@@ -1,5 +1,7 @@
 package canny3d_thresholder;
 
+import java.io.IOException;
+
 import ij.IJ;
 import ij.ImagePlus;
 
@@ -17,8 +19,13 @@ public class Processing {
 	 */
 
 	static boolean doProcessing(String path, String name, String outputDir, ProcessSettings pS, ProgressDialog pD) {
-
-		ImagePlus imp = pS.openImage(path + System.getProperty("file.separator") + name);
+		ImagePlus imp;
+		try{
+			imp = pS.openImage(path + System.getProperty("file.separator") + name);
+		} catch(IOException e) {
+			IJ.log(e.getMessage() + " - skipped task");
+			return false;
+		}
 		imp.hide();
 		ImagePlus thrChannel = splitAndSaveChannels(imp, pS, name, outputDir); // does nothing if plain
 																					// thresholding channel is input
