@@ -56,7 +56,7 @@ public class ProcessSettings {
 	String resultsDir = ""; // Specifies dir where output files will be saved if they are to be saved no new
 							// folder
 
-	double gausSigma = 1.0;
+	double gaussSigma = 1.0;
 	double cannyAlpha = 5.0;
 	static String[] thrAlgorithms = { "Custom Value", "Huang", "Intermodes", "IsoData", "IJ_IsoData", "Li",
 			"MaxEntropy", "Mean", "MinError", "Minimum", "Moments", "Otsu", "Percentile", "RenyiEntropy", "Shanbhag",
@@ -104,7 +104,7 @@ public class ProcessSettings {
 
 		gd.addChoice("File selection method ", TASKVARIANTS, inst.selectedTaskVariant);
 		gd.addChoice("Select image input format", INPUTFORMATS, inst.selectedInputFormat);
-		gd.addNumericField("Sigma for Gaussian blur", inst.gausSigma, 4);
+		gd.addNumericField("Sigma for Gaussian blur (pixels)", inst.gaussSigma, 4);
 		gd.addNumericField("Alpha (sensitivity for edge detection)", inst.cannyAlpha, 4);
 		gd.addChoice("Select method for low threshold", thrAlgorithms, inst.highThrAlgorithm);
 		gd.addNumericField("Value (if custom value is chosen)", inst.highThr, 8);
@@ -118,7 +118,7 @@ public class ProcessSettings {
 		// read and process variables--------------------------------------------------
 		inst.selectedTaskVariant = gd.getNextChoice();
 		inst.selectedInputFormat = gd.getNextChoice();
-		inst.gausSigma = gd.getNextNumber();
+		inst.gaussSigma = gd.getNextNumber();
 		inst.cannyAlpha = gd.getNextNumber();
 		inst.highThrAlgorithm = gd.getNextChoice();
 		inst.lowThrAlgorithm = gd.getNextChoice();
