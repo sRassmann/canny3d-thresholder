@@ -1,9 +1,12 @@
 package canny3d_thresholder;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.text.TextPanel;
 
 public class Processing {
 
@@ -75,6 +78,7 @@ public class Processing {
 						+ ("_canny3d.tif"));
 		bin.changes = false;
 		bin.close();
+		saveLogFile(path, name, outputDir, pS);
 		return true;
 	}
 
@@ -127,6 +131,20 @@ public class Processing {
 		}
 		imp.close();
 		return thrChannel;
+	}
+	
+
+	private static void saveLogFile(String path, String name, String outputDir, ProcessSettings pS) {
+		TextPanel sb = new TextPanel();
+		sb.append("Log File for: " + path + name);
+		sb.append("\nprocessed on " + new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date()) + "\n");
+
+		sb.append(pS.toString());
+					
+		sb.saveAs(outputDir + System.getProperty("file.separator") + ProcessSettings.removeFileSuffix(name)
+		+ ((pS.selectedInputFormat == ProcessSettings.INPUTFORMATS[0]) ? ""
+				: ("_" + ProcessSettings.CHANNELSUFFIX + (pS.thrChannel + 1)))
+		+ ("_canny3d_log.txt"));	
 	}
 
 }

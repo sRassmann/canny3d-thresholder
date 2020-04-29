@@ -25,10 +25,13 @@ import ij.io.FileInfo;
  * and methods to implement the methods to retrieves file names and paths and
  * stores the values.
  * 
- * @author sebas
+ * @author Sebastian Rassmann
  * 
  */
 public class ProcessSettings {
+	
+	static String pluginName;
+	static String pluginVersion;
 
 	// add necessary Settings and defaults here
 
@@ -97,6 +100,9 @@ public class ProcessSettings {
 
 		ProcessSettings inst = new ProcessSettings(); // returned instance of ImageSetting class
 
+		ProcessSettings.pluginName = pluginName;
+		ProcessSettings.pluginVersion = pluginVersion;
+		
 		GenericDialog gd = new GenericDialog(pluginName + " - Image Processing Settings");
 		gd.addMessage(pluginName + " - Version " + pluginVersion + " (© 2020 Sebastian Rassmann)",
 				new Font("Sansserif", Font.BOLD, 14));
@@ -438,5 +444,23 @@ public class ProcessSettings {
 			fc.showDialog(fc, "Select Directory for Output");
 			this.resultsDir = fc.getSelectedFile().getPath() + System.getProperty("file.separator");
 		}
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append(pluginName + " " + pluginVersion + "\n");
+		
+		sb.append("\nProcessing settings:");
+		sb.append("\nInput type: 	" + selectedInputFormat); 
+		sb.append("\nThreshold Channel index (IJ logic - 1-based):	" + (thrChannel+1) );
+		sb.append("\nGauss Sigma: 	" + gaussSigma);
+		sb.append("\nCanny Alpha:	" + cannyAlpha);
+		sb.append("\nLow Threshold Algorithm:	" + lowThrAlgorithm);
+		sb.append("\nLow Threshold Value:	" + lowThr);
+		sb.append("\nHigh Threshold Algorithm:	" + highThrAlgorithm);
+		sb.append("\nLower Threshold Value:	" + highThr);
+		
+		return sb.toString();
 	}
 }

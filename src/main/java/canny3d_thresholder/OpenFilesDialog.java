@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -29,9 +28,11 @@ import ij.gui.GenericDialog;
  * adding an function to select files containing certain pattern (regex or
  * non-regex) in all subdirectories of a chosen root directory
  * 
+ * Parts of the code were inherited from MotiQ (https://github.com/hansenjn/MotiQ).
+ * 
  * @author Jan Niklas Hansen and Sebastian Rassmann
- *
  */
+
 public class OpenFilesDialog extends javax.swing.JFrame implements ActionListener {
 	LinkedList<File> filesToOpen = new LinkedList<File>();
 	boolean done = false, dirsaved = false;
@@ -256,10 +257,6 @@ public class OpenFilesDialog extends javax.swing.JFrame implements ActionListene
 		}
 		
 		return;
-	}
-
-	private void patternMatchingGD() throws IOException {
-
 	}
 
 	static String transformStringToRegex(String pattern) {

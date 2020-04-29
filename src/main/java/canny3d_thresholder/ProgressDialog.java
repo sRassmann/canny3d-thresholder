@@ -1,5 +1,11 @@
 package canny3d_thresholder;
 
+/**
+ * Adapted from from MotiQ (https://github.com/hansenjn/MotiQ).
+ * 
+ * @author Jan Niklas Hansen
+ */
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
