@@ -78,7 +78,7 @@ public class Processing {
 						+ ("_canny3d.tif"));
 		bin.changes = false;
 		bin.close();
-		saveLogFile(path, name, outputDir, pS);
+		saveLogFile(path, name, outputDir, pS, lowThr, highThr);
 		return true;
 	}
 
@@ -134,17 +134,21 @@ public class Processing {
 	}
 	
 
-	private static void saveLogFile(String path, String name, String outputDir, ProcessSettings pS) {
+	private static void saveLogFile(String path, String name, String outputDir, ProcessSettings pS, double lowThr, double highThr) {
 		TextPanel sb = new TextPanel();
 		sb.append("Log File for: " + path + name);
 		sb.append("\nprocessed on " + new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date()) + "\n");
 
 		sb.append(pS.toString());
+		
+		sb.append("\nLow Threshold Value (calculated):	" + lowThr);
+		sb.append("\nHigh Threshold Value (calculated):	" + highThr);
 					
 		sb.saveAs(outputDir + System.getProperty("file.separator") + ProcessSettings.removeFileSuffix(name)
 		+ ((pS.selectedInputFormat == ProcessSettings.INPUTFORMATS[0]) ? ""
 				: ("_" + ProcessSettings.CHANNELSUFFIX + (pS.thrChannel + 1)))
-		+ ("_canny3d_log.txt"));	
+		+ ("_canny3d_log.txt"));
+		
 	}
 
 }

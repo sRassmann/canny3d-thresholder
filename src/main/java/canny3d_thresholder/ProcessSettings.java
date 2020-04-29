@@ -457,9 +457,9 @@ public class ProcessSettings {
 		sb.append("\nGauss Sigma: 	" + gaussSigma);
 		sb.append("\nCanny Alpha:	" + cannyAlpha);
 		sb.append("\nLow Threshold Algorithm:	" + lowThrAlgorithm);
-		sb.append("\nLow Threshold Value:	" + lowThr);
 		sb.append("\nHigh Threshold Algorithm:	" + highThrAlgorithm);
-		sb.append("\nLower Threshold Value:	" + highThr);
+		sb.append("\nLow Threshold Value (user defined):	" + lowThr);
+		sb.append("\nHigh Threshold Value (user defined):	" + highThr);
 		
 		return sb.toString();
 	}
