@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import java.awt.FileDialog;
 
 import ij.gui.GenericDialog;
 
@@ -28,7 +29,8 @@ import ij.gui.GenericDialog;
  * adding an function to select files containing certain pattern (regex or
  * non-regex) in all subdirectories of a chosen root directory
  * 
- * Parts of the code were inherited from MotiQ (https://github.com/hansenjn/MotiQ).
+ * Parts of the code were inherited from MotiQ
+ * (https://github.com/hansenjn/MotiQ).
  * 
  * @author Jan Niklas Hansen and Sebastian Rassmann
  */
@@ -44,16 +46,18 @@ public class OpenFilesDialog extends javax.swing.JFrame implements ActionListene
 	JScrollPane jScrollPane1;
 	JList Liste1;
 	JButton loadSingleFilesButton, loadByPatternButtom, removeFileButton, goButton;
-	
+
 	ProcessSettings pS = null;
 
 	public OpenFilesDialog() {
 		super();
 		initGUI();
 	}
-	
+
 	/**
-	 * init OpenFilesDialog with instance of ProcessSettings to allow communicate between these classes
+	 * init OpenFilesDialog with instance of ProcessSettings to allow communicate
+	 * between these classes
+	 * 
 	 * @param pS
 	 */
 	public OpenFilesDialog(ProcessSettings pS) {
@@ -107,13 +111,13 @@ public class OpenFilesDialog extends javax.swing.JFrame implements ActionListene
 					loadSingleFilesButton.setVerticalAlignment(SwingConstants.BOTTOM);
 					bottom.add(loadSingleFilesButton);
 				}
-					loadByPatternButtom = new JButton();
-					loadByPatternButtom.addActionListener(this);
-					loadByPatternButtom.setText("select files by pattern");
-					loadByPatternButtom.setMinimumSize(new java.awt.Dimension(locWidth3, locHeight));
-					loadByPatternButtom.setVisible(true);
-					loadByPatternButtom.setVerticalAlignment(SwingConstants.BOTTOM);
-					bottom.add(loadByPatternButtom);
+				loadByPatternButtom = new JButton();
+				loadByPatternButtom.addActionListener(this);
+				loadByPatternButtom.setText("select files by pattern");
+				loadByPatternButtom.setMinimumSize(new java.awt.Dimension(locWidth3, locHeight));
+				loadByPatternButtom.setVisible(true);
+				loadByPatternButtom.setVerticalAlignment(SwingConstants.BOTTOM);
+				bottom.add(loadByPatternButtom);
 				{
 					removeFileButton = new JButton();
 					removeFileButton.addActionListener(this);
@@ -141,20 +145,39 @@ public class OpenFilesDialog extends javax.swing.JFrame implements ActionListene
 	public void actionPerformed(ActionEvent ae) {
 		Object eventQuelle = ae.getSource();
 		if (eventQuelle == loadSingleFilesButton) {
-			JFileChooser chooser = new JFileChooser();
-			chooser.setPreferredSize(new Dimension(600, 400));
-			if (dirsaved) {
-				chooser.setCurrentDirectory(saved);
-			}
-			chooser.setMultiSelectionEnabled(true);
-			Component frame = null;
-			chooser.showOpenDialog(frame);
-			File[] files = chooser.getSelectedFiles();
-			for (int i = 0; i < files.length; i++) {
-//					IJ.log("" + files[i].getPath());
-				filesToOpen.add(files[i]);
-				saved = files[i];
-				dirsaved = true;
+			String OS = System.getProperty("os.name").toUpperCase();
+			if (OS.contains("MAC")) {
+				java.awt.FileDialog fd = new java.awt.FileDialog(this, "Select files to add to list.");
+				fd.setDirectory(System.getProperty("user.dir", "."));
+				if (dirsaved) {
+					fd.setDirectory(saved.getPath());
+				}
+				fd.setMultipleMode(true);
+				fd.setMode(FileDialog.LOAD);
+				fd.setVisible(true);
+
+				File[] files = fd.getFiles();
+				for (int i = 0; i < files.length; i++) {
+					filesToOpen.add(files[i]);
+					saved = files[i];
+					dirsaved = true;
+				}
+			} else {
+				JFileChooser chooser = new JFileChooser();
+				chooser.setPreferredSize(new Dimension(600, 400));
+				chooser.setCurrentDirectory(new File(System.getProperty("user.dir", ".")));
+				if (dirsaved) {
+					chooser.setCurrentDirectory(saved);
+				}
+				chooser.setMultiSelectionEnabled(true);
+				Component frame = null;
+				chooser.showOpenDialog(frame);
+				File[] files = chooser.getSelectedFiles();
+				for (int i = 0; i < files.length; i++) {
+					filesToOpen.add(files[i]);
+					saved = files[i];
+					dirsaved = true;
+				}
 			}
 			updateDisplay();
 		}
@@ -179,11 +202,11 @@ public class OpenFilesDialog extends javax.swing.JFrame implements ActionListene
 
 	private void matchPattern(String rootPath) {
 		String posFilePattern = "", negFilePattern = "", negDirPattern = "";
-		
-		if(pS != null) {
+
+		if (pS != null) {
 			posFilePattern = pS.posFilePattern;
 			negFilePattern = pS.negFilePattern;
-			negDirPattern  = pS.negFilePattern;
+			negDirPattern = pS.negFilePattern;
 		}
 
 		JFileChooser fc = new JFileChooser();
@@ -249,13 +272,13 @@ public class OpenFilesDialog extends javax.swing.JFrame implements ActionListene
 				}
 			}
 		}
-		
-		if(pS != null) {
+
+		if (pS != null) {
 			pS.posFilePattern = posFilePattern;
 			pS.negFilePattern = negFilePattern;
-			pS.negDirPattern  = negFilePattern;
+			pS.negDirPattern = negFilePattern;
 		}
-		
+
 		return;
 	}
 
