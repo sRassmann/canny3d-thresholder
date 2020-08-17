@@ -29,7 +29,7 @@ import ij.io.FileInfo;
  * 
  */
 public class ProcessSettings {
-	
+
 	static String pluginName;
 	static String pluginVersion;
 
@@ -102,7 +102,7 @@ public class ProcessSettings {
 
 		ProcessSettings.pluginName = pluginName;
 		ProcessSettings.pluginVersion = pluginVersion;
-		
+
 		GenericDialog gd = new GenericDialog(pluginName + " - Image Processing Settings");
 		gd.addMessage(pluginName + " - Version " + pluginVersion + " (© 2020 Sebastian Rassmann)",
 				new Font("Sansserif", Font.BOLD, 14));
@@ -149,7 +149,7 @@ public class ProcessSettings {
 		String[] channels = new String[nChannels];
 		inst.saveChannels = new boolean[nChannels];
 		for (int c = 0; c < nChannels; c++) {
-			channels[c] = "Save channel " + (c + 1);
+			channels[c] = "Channel " + (c + 1);
 			inst.saveChannels[c] = true;
 		}
 		gd.addChoice("Thresholding Channel", channels, "Channel " + inst.thrChannel);
@@ -157,12 +157,11 @@ public class ProcessSettings {
 		gd.showDialog();
 
 		inst.thrChannel = (Integer.parseInt(gd.getNextChoice().replace("Channel ", "")) - 1);
-//		IJ.log("threshold channel: " + inst.thrChannel + " (" + ++inst.thrChannel + ")");
 		for (int c = 0; c < nChannels; c++) {
 			inst.saveChannels[c] = gd.getNextBoolean();
 		}
 		if (gd.wasCanceled())
-			throw new Exception("GD canceled by user");
+			throw new Exception("GD canceled by user - Bullshit");
 	}
 
 	/**
@@ -386,7 +385,7 @@ public class ProcessSettings {
 	public ImagePlus openImage(String path) throws IOException {
 		ImagePlus imp;
 		if (this.selectedInputFormat != ProcessSettings.INPUTFORMATS[2]) {
-			if (! path.substring(path.lastIndexOf("."), path.length()).equals(".tif")) {
+			if (!path.substring(path.lastIndexOf("."), path.length()).equals(".tif")) {
 				throw new IOException("File " + path + " is no TIFF");
 			}
 			imp = IJ.openImage(path);
@@ -445,22 +444,23 @@ public class ProcessSettings {
 			this.resultsDir = fc.getSelectedFile().getPath() + System.getProperty("file.separator");
 		}
 	}
-	
+
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		
-		sb.append(pluginName + " " + pluginVersion + "\n");
-		
+
+		sb.append(pluginName + " v" + pluginVersion + "\n");
+
 		sb.append("\nProcessing settings:");
-		sb.append("\nInput type: 	" + selectedInputFormat); 
-		sb.append("\nThreshold Channel index (IJ logic - 1-based):	" + (thrChannel+1) );
+		sb.append("\nInput type: 	" + selectedInputFormat);
+		sb.append("\nThreshold Channel index (IJ logic - 1-based):	" + (thrChannel + 1));
 		sb.append("\nGauss Sigma: 	" + gaussSigma);
 		sb.append("\nCanny Alpha:	" + cannyAlpha);
 		sb.append("\nLow Threshold Algorithm:	" + lowThrAlgorithm);
 		sb.append("\nHigh Threshold Algorithm:	" + highThrAlgorithm);
 		sb.append("\nLow Threshold Value (user defined):	" + lowThr);
 		sb.append("\nHigh Threshold Value (user defined):	" + highThr);
-		
+
 		return sb.toString();
 	}
 }

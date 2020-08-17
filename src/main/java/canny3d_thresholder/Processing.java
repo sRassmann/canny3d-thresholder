@@ -142,7 +142,7 @@ public class Processing {
 		sb.append(pS.toString());
 		
 		sb.append("\nLow Threshold Value (calculated):	" + lowThr);
-		sb.append("\nHigh Threshold Value (calculated):	" + highThr);
+		sb.append("High Threshold Value (calculated):	" + highThr);
 					
 		sb.saveAs(outputDir + System.getProperty("file.separator") + ProcessSettings.removeFileSuffix(name)
 		+ ((pS.selectedInputFormat == ProcessSettings.INPUTFORMATS[0]) ? ""
