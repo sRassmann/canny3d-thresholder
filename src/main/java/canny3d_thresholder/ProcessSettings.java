@@ -104,7 +104,7 @@ public class ProcessSettings {
 		ProcessSettings.pluginVersion = pluginVersion;
 
 		GenericDialog gd = new GenericDialog(pluginName + " - Image Processing Settings");
-		gd.addMessage(pluginName + " - Version " + pluginVersion + " (© 2020 Sebastian Rassmann)",
+		gd.addMessage(pluginName + " - Version " + pluginVersion + " (© 2020 SR)",
 				new Font("Sansserif", Font.BOLD, 14));
 		gd.addMessage("Insert Processing settings", new Font("Sansserif", Font.PLAIN, 14));
 

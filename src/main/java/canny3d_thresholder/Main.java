@@ -9,7 +9,7 @@ import ij.plugin.PlugIn;
 public class Main implements PlugIn {
 
 	static String pluginName = "Canny 3D Thresholder"; 
-	static String pluginVersion = "0.1.0";
+	static String pluginVersion = "0.2.0";
 	ProgressDialog progressDialog;
 	boolean processingDone = false;
 	boolean continueProcessing = true;

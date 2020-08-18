@@ -6,27 +6,18 @@ Developed and optimized for [CiliaQ](https://github.com/hansenjn/CiliaQ).
 
 ## Plugin Description
 
-<<<<<<< HEAD
 The plugin implements a [custom batch processing handler](https://github.com/sRassmann/imageJ-plugin-template) and performs the following steps:   
-1. Smoothes the image stack to suppress random noise via a 2D Gaussian blur filter (the z dimension is assumed to have a lower resolution and a blur effect due to confocal imaging)
-=======
-The plugin implements a [custom batch processing handler](https://github.com/sRassmann/imageJ-plugin-template) and performs the follwoing steps:   
-1. Smoothes the image stack to supress random noise via a 2D Gaussian blur filter (the z dimension is assumed to have a lower resolution and a blur efect due to confocal imaging)
->>>>>>> branch 'master' of https://github.com/sRassmann/canny3d-thresholder
-2. Detect edges using a 3D Sobel kernel
-3. Performing a 3D Hysterisis Threshold: All pixels above a defined high threshold are kept, pixel below the defined low threshold are neglected, pixels in between the low and high threshold are only kept if they are connected to pixels above the high threshold.   
+1. Smoothes the image stack to suppress random noise via a 2D Gaussian blur filter (the z dimension is assumed to have a lower resolution and a blur effect due to confocal imaging).
+2. Detects edges using a 3D Sobel kernel.
+3. Performs a 3D Hysterisis Threshold: All pixels above a defined high threshold are kept, pixel below the defined low threshold are neglected, pixels in between the low and high threshold are only kept if they are connected to pixels above the high threshold.   
 High and low thresholds can be defined using either custom values or can be calculated using ImageJ's thresholding methods based on the histogram of the whole stack.
-4. Holes encapsulated in all dimensions are filled
-<<<<<<< HEAD
+4. Holes encapsulated in all dimensions are filled.
 5. The original intensity values within the detected objects are kept, whereas the remaining voxels are set to 0. Thus, the output image is pseudo binarized and intensity values within the objects can be evaluated in downstream analysis (e.g. CiliaQ).
-=======
-5. The original intensity values within the detected objects are kept, wheares the remaining voxels are set to 0. Thus, the output image is pseudo binarized and intensity values within the objects can be evaluated in downstream analysis (e.g. CiliaQ).
->>>>>>> branch 'master' of https://github.com/sRassmann/canny3d-thresholder
 
+The plugin can also save the remaining channels of the stack, thus, can act as an additional channel splitter.
 
 ## User Guide
 
-<<<<<<< HEAD
 ### installation
 
 1. This plugin requires packages included in the [Fiji release](https://imagej.net/Fiji/Downloads) of ImageJ. Core ImageJ might work if the dependencies are installed manually but is not recommended!
@@ -36,7 +27,7 @@ High and low thresholds can be defined using either custom values or can be calc
 
 
 ### input
-As of v0.0.2 the plugin can handle multi-channel (up to 4 channels) TIFF stacks as well as common Bioformats (e.g. Nikon's .nd2 or Olympus' .oib). The tool extracts a defined channel and performs the thresholding and can also save the remaining channels. Thus, the tool can be used as a channel splitter. 
+The plugin can handle multi-channel (up to 4 channels) timelapse image stacks ("4D") provided either as TIFF stack or as a common Bioformat (e.g. Nikon's .nd2 or Olympus' .oib).
 
 ### processing
 1. Open ImageJ and select *Plugin*>*SR*>*Canny 3D Thresholder*
@@ -51,8 +42,8 @@ As of v0.0.2 the plugin can handle multi-channel (up to 4 channels) TIFF stacks 
 3. If the manual file selection mode was choose a file selection dialog will apear:
   * Click on *select files individually* to select single files from the file system. 
   * The option *select files by pattern* allows to load all files containing a specific character pattern within a defined root directory. Select a directory to start the search in the *Choose directory to start pattern matching* dialog and define the pattern which the name of each file should contain (e.g. '.nd2' for all microscopy files in the folder) - all files containing this character string at least on time will be added to the file list. Further, it is possible to neglect all files containing a certain pattern (e.g. a date) or which are located in directory containing a defined pattern in the name (e.g. directories marked with 'processed'). For more advanced selection (e.g. any date followed by an specific experiment ID) you can choose *Input as Regex* and specify patterns as regular expressions (regex). See [here](https://www.vogella.com/tutorials/JavaRegularExpressions/article.html) for an introduction.
-  *  Within the Multi-File-Manager selection dialog individual files can be manually excluded by selecting the name of the file and pressing *remove selected file*.
-=======
+  * Within the Multi-File-Manager selection dialog individual files can be manually excluded by selecting the name of the file and pressing *remove selected file*.
+  
 ### Installation
 
 1. This plugin requires packages included in the [Fiji release](https://imagej.net/Fiji/Downloads) of ImageJ. Core ImageJ might work if the dependencies are installed manually but is not recommended!
@@ -68,25 +59,24 @@ As of v0.0.2 the plugin can handle multi-channel (up to 4 channels) TIFF stacks 
 1. Open ImageJ and select *Plugin*>*SR*>*Canny 3D Thresholder*
 2. In the user dialog the following options are available:
   * File selection mode: Allows to use the active (=last used) image in ImageJ (*active image in FIJI*), all images open images (*all images open in FIJI*), or to load a previously defined set of files from .txt containing the full paths to the images in separate lines (*use list*). The pre-selected option (*manual file selection*) lets the user select files in a subsequent dialog (*Multi-File-Manager*).
-  * Select image input image format: Choose between single channel stack, multi channel stack, or a raw microscopy file. If multi channel stack or raw microscopy file is chosen another dialog the thresholding channel and the set of addtionally saved channels need to be defined in a subsequent dialog.
-  * Sigma for Gaussian blur: Defines the amount of blurr added to the image as the sigma ("radius") of the Gaussian distribution in pixels.
+  * Select image input image format: Choose between single channel stack, multi channel stack, or a raw microscopy file. If multi channel stack or raw microscopy file is chosen another dialog the thresholding channel and the set of additionaly saved channels need to be defined in a subsequent dialog.
+  * Sigma for Gaussian blur: Defines the amount of blur added to the image as the sigma ("radius") of the Gaussian distribution in pixels.
   In the test data a sigma of 1 and 0.5 pixels yielded good results for images with 0.1 and 0.2 µm/pixel, respectively. This values might vary with the quality (less noise might allow for less blur and, thus a lower value for sigma).
   * Alpha: The parameters defines the sensitivity of the edge detection.
-  * Method for low and high threshold: Select one of ImageJ's core thresholding algorithms to calculate the low and high threshold or choose *Custom Value* to define a fixed value. 
+  * Method for low and high threshold: Select one of ImageJ's core thresholding algorithms to calculate the low and high threshold or choose *Custom Value* to define a fixed value.
   * Output to new Folder: Allows to select a folder where all output data is saved. If this option is not chosen, each output file will be saved in the same directory as the corresponding raw input file.
 3. If the manual file selection mode was choose a file selection dialog will apear:
   * Click on *select files individually* to select single files from the file system. 
   * The option *select files by pattern* allows to load all files containing a specific character pattern within a defined root directory. Select a directory to start the search in the *Choose directory to start pattern matching* dialog and define the pattern which the name of each file should contain (e.g. '.nd2' for all microscopy files in the folder) - all files containing this character string at least on time will be added to the file list. Further, it is possible to neglect all files containing a certaing pattern (e.g. a date) or which are located in directory containg a defined pattern in the name (e.g. directories marked with 'processed'). For more advanced selection (e.g. any date followed by an specific experiment ID) you can choose *Input as Regex* and specify patterns as regular expressions (regex). See [here](https://www.vogella.com/tutorials/JavaRegularExpressions/article.html) for an introduction.
-  *  Within the Multi-File-Manager selection dialog indivdual files can be manually excluded by selecting the name of the file and pressing *remove selected file*.
->>>>>>> branch 'master' of https://github.com/sRassmann/canny3d-thresholder
+  * Within the Multi-File-Manager selection dialog individual files can be manually excluded by selecting the name of the file and pressing *remove selected file*.
   * Press '*start processing*' to confirm the set of selected files.
 4.  A progress bar will appear to inform over the progress in processing. Note: During processing some windows might pop up for some microseconds and the log dialog from ImageJ will appear. Unfortunatly, this happens within the used plugins, so for now there is no way to turn it off. 
   
 ### output
 If single channel images are processed the thresholded images are saved with suffix  '*_canny3d.tif*' as a 16 bit grayscale image.
 
-If multi channel images are processed the separated channels are stored with the suffix  '*_C*<*channel index*>*.tif*' . The thresholded images are stored as '*_C*<*channel index*>*_canny3d.tif*'.
+If multi channel images are processed the separated channels are stored with the suffix  '*_C*<*channel index*>*.tif*'. The thresholded images are stored as '*_C*<*channel index*>*_canny3d.tif*'.
 
-Jointly with the files a log file (suffix '*_C*<*channel index*>*_canny3d_log.txt*') is saved.
+A log file (suffix '*_C*<*channel index*>*_canny3d_log.txt*') is saved jointly with the output files.
   
   
