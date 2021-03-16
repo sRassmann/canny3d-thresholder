@@ -80,3 +80,6 @@ If multi channel images are processed the separated channels are stored with the
 A log file (suffix '*_C*<*channel index*>*_canny3d_log.txt*') is saved jointly with the output files.
   
   
+# Citation
+
+Hansen JN, Rassmann S, Stüven B, Jurisch-Yaksi N, Wachten D. CiliaQ: a simple, open-source software for automated quantification of ciliary morphology and fluorescence in 2D, 3D, and 4D images. Eur Phys J E Soft Matter. 2021 Mar 8;44(2):18. doi: 10.1140/epje/s10189-021-00031-y. PMID: [33683488](https://pubmed.ncbi.nlm.nih.gov/33683488/).
